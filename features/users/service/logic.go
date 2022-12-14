@@ -50,11 +50,19 @@ func (service *Service) GetProfile(userid uint) (user.CoreUser, string, error) {
 }
 
 func (service *Service) PutUpdate(userid uint, core user.CoreUser) (string, error) {
+	if core.Password != "" {
+		hashPass, _ := bcrypt.GenerateFromPassword([]byte(core.Password), bcrypt.DefaultCost)
+		core.Password = string(hashPass)
+	}
 	msg, err := service.do.PutUpdate(userid, core)
 	return msg, err
 }
 
 func (service *Service) PatchUpdate(userid uint, core user.CoreUser) (string, error) {
+	if core.Password != "" {
+		hashPass, _ := bcrypt.GenerateFromPassword([]byte(core.Password), bcrypt.DefaultCost)
+		core.Password = string(hashPass)
+	}
 	msg, err := service.do.PatchUpdate(userid, core)
 	return msg, err
 }
